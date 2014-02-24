@@ -1,58 +1,61 @@
-def compress(uncompressed):
-    """Compress a string to a list of output symbols."""
- 
-    # Build the dictionary.
-    dict_size = 256
-    dictionary = dict((chr(i), chr(i)) for i in xrange(dict_size))
-    # in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
- 
-    w = ""
-    result = []
-    for c in uncompressed:
-        wc = w + c
-        if wc in dictionary:
-            w = wc
-        else:
-            result.append(dictionary[w])
-            # Add wc to the dictionary.
-            dictionary[wc] = dict_size
-            dict_size += 1
-            w = c
- 
-    # Output the code for w.
-    if w:
-        result.append(dictionary[w])
-    return result
- 
- 
-def decompress(compressed):
-    """Decompress a list of output ks to a string."""
- 
-    # Build the dictionary.
-    dict_size = 256
-    dictionary = dict((chr(i), chr(i)) for i in xrange(dict_size))
-    # in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
- 
-    w = result = compressed.pop(0)
-    for k in compressed:
-        if k in dictionary:
-            entry = dictionary[k]
-        elif k == dict_size:
-            entry = w + w[0]
-        else:
-            raise ValueError('Bad compressed k: %s' % k)
-        result += entry
- 
-        # Add w+entry[0] to the dictionary.
-        dictionary[dict_size] = w + entry[0]
-        dict_size += 1
- 
-        w = entry
-    return result
+import nltk
+#To construct WLZW
+#Dictionary is returned which is the hot pattern
+#Dictionary started with empty set
+#Index by words for WLZW
+#Keep dictionary as class memember since compress is called sentence by sentence
+#nltk needed, data in nltk needed as well
+class WLZWCompressor:
+	
+	def __init__(self):
+		# Build the dictionary.
+		self._dict_size = 0 #256
+		self._dictionary = dict()# dict((chr(i), chr(i)) for i in xrange(dict_size))
+		# in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
 
-#test:
+	def compress_sent(self,uncompressed):
+		"""construct the dictionary using the sentence. dictionary is shared on same object accross multiple calls. this assumes single sentence to be passed"""
 
-compressed = compress('TOBEORNOTTOBEORTOBEORNOT')
-print (compressed)
-decompressed = decompress(compressed)
-print (decompressed)
+		s=uncompressed.split() #using simple white space split for now
+		 
+		w = ""
+		#result = []
+		for c in s:
+			#add all the unigrams into the dictionary
+			if c not in self._dictionary:
+				self._dictionary[c]=self._dict_size
+				self._dict_size += 1
+			wc = w + " " + c
+			if wc.strip() in self._dictionary:
+				w = wc
+			else:
+				#result.append(dictionary[w])
+				# Add wc to the dictionary.
+				self._dictionary[wc.strip()] = self._dict_size
+				self._dict_size += 1
+				w = c
+		 
+		# Output the code for w.
+		#if w:
+		#	result.append(dictionary[w])
+		#return result
+	
+	
+	def compress(self,uncompressed):
+		"""construct the dictionary for a chunk of text"""
+		#sentence tokenizer
+		tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
+		s=tokenizer.tokenize(uncompressed)
+
+		for c in s:
+			self.compress_sent(c)
+		
+
+	def get_dict(self):	
+		""""return the class dictionary. should be called after all text is compressed"""
+		return self._dictionary
+	
+	def get_pattern(self):
+		return self._dictionary.keys() 
+	 
+
