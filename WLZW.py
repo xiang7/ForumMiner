@@ -1,4 +1,7 @@
 import nltk
+import os
+from multiprocessing import Pool
+import copy_reg 
 #To construct WLZW
 #Dictionary is returned which is the hot pattern
 #Dictionary started with empty set
@@ -49,7 +52,21 @@ class WLZWCompressor:
 
 		for c in s:
 			self.compress_sent(c)
-		
+	
+	#corpus: file name
+	#p: number of processes
+	def compress_file(self,corpus, np):
+		"""construct WLZW pattern out of a corpus, parallelism is an option"""
+		p=Pool(processes=np)
+		l=[]
+		for i in range(0,np):
+			l.append((corpus,i,np))
+		result=p.map(_compress_file,l)
+		final=set()
+		for re in result:
+			final=final.union(re)
+		return final
+
 
 	def get_dict(self):	
 		""""return the class dictionary. should be called after all text is compressed"""
@@ -59,3 +76,26 @@ class WLZWCompressor:
 		return self._dictionary.keys() 
 	 
 
+def _compress_chunk(chunk):
+	wlzw=WLZWCompressor()
+	f=open(chunk,'r')
+	for line in f:
+		wlzw.compress(line)
+	return set(wlzw.get_pattern())
+
+def _compress_file(tup):
+	filename=tup[0]
+	rank=tup[1]
+	p=tup[2]
+	f=open(filename,'r')
+	s=os.path.getsize(filename)
+	wlzw=WLZWCompressor()
+	if rank!=0:
+		f.seek(s/p*rank)
+		f.readline()
+	for line in f:
+		wlzw.compress(line)
+		if f.tell()>=s/p*(rank+1):
+			break
+	return set(wlzw.get_pattern())
+	
