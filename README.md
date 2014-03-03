@@ -15,4 +15,5 @@ tested on 107M or 1024000 lines of tweets
 Can test on a larger machine (ocean or mc18 with more processes)
 
 Current task:
-WLZW compression algorithm - read the source file, understand it and modify it into word level LZW
+Write RIDF, with parallelized search
+Write MI?
