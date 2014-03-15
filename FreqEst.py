@@ -29,5 +29,11 @@ class FreqEst:
 		for l in text_list:
 			self.search(l)
 
+	#search a file
+	def search_file(self,filename):
+		f=open(filename,'r')
+		for line in f:
+			self.search(line)
+
 	def get_freq(self):
 		return self._table

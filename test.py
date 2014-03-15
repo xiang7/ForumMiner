@@ -24,6 +24,17 @@ def test_freq():
 	for a,b in sorted_x:
 		print a,b
 
+def test_freq_file(word_file,text_file):
+	word_list=[]
+	f=open(word_file,'r')
+	for line in f:
+		word_list.append(line.trim())
+	fe=FreqEst(word_list)
+	fe.search_file(text_file)
+	sorted_x = sorted(fe.get_freq().iteritems(), key=operator.itemgetter(1))
+	for a,b in sorted_x:
+		print a,b
+
 def test_parallel(p):
 	compressor=WLZWCompressor()
 	result=compressor.compress_file('test',p)
