@@ -62,16 +62,32 @@ class WLZWCompressor:
 		l=[]
 		for i in range(0,np):
 			l.append((corpus,i,np))
-		curr=time.time()
-		result=p.map(_compress_file,l)
-		print "compress time ", time.time()-curr
-		curr=time.time()
-		final=set()
-		for re in result:
-			final=final.union(re)
-		print "union time ",time.time()-curr
-		return final
-
+#		curr=time.time()
+		result=[]
+		result=p.imap_unordered(_compress_file,l,1)
+#		print "compress time ", time.time()-curr
+#		curr=time.time()
+		if np==1:
+			return result.next()
+		else:
+			final_set=_union(result)
+#			unit=4
+#			new_result=[]
+#			i=0
+#			while i<np:
+#				temp=[]
+#				for j in range(0,unit):
+#					temp.append(result.next())
+#				i+=unit
+#				print "temp ",len(temp)
+#				new_result.append(temp)
+#			print "new_result",len(new_result)
+#			r=p.imap_unordered(_union,new_result,1)
+#			final_set=_union(r)
+		#final_set=set(final)
+#		print "union time ",time.time()-curr
+			return final_set
+			
 
 	def get_dict(self):	
 		""""return the class dictionary. should be called after all text is compressed"""
@@ -81,6 +97,18 @@ class WLZWCompressor:
 		return self._dictionary.keys() 
 	 
 
+def _union(l):
+	result=set()
+	for re in l:
+		result = result | set(re)
+	return result
+
+def _union_list(l):
+	result=[]
+	for s in l:
+		result.extend(s)
+	return set(result)
+
 def _compress_chunk(chunk):
 	wlzw=WLZWCompressor()
 	f=open(chunk,'r')
@@ -89,18 +117,23 @@ def _compress_chunk(chunk):
 	return set(wlzw.get_pattern())
 
 def _compress_file(tup):
+#	curr=time.time()
 	filename=tup[0]
 	rank=tup[1]
 	p=tup[2]
 	f=open(filename,'r')
 	s=os.path.getsize(filename)
 	wlzw=WLZWCompressor()
+	tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
 	if rank!=0:
 		f.seek(s/p*rank)
 		f.readline()
 	for line in f:
-		wlzw.compress(line)
+		sents=tokenizer.tokenize(line)
+		for sent in sents:
+			wlzw.compress_sent(sent)
 		if f.tell()>=s/p*(rank+1):
 			break
-	return set(wlzw.get_pattern())
-	
+	result=wlzw.get_pattern()
+#	print "in compress file: ",time.time()-curr
+	return result
