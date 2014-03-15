@@ -2,6 +2,7 @@ import nltk
 import os
 from multiprocessing import Pool
 import copy_reg 
+import time
 #To construct WLZW
 #Dictionary is returned which is the hot pattern
 #Dictionary started with empty set
@@ -61,10 +62,14 @@ class WLZWCompressor:
 		l=[]
 		for i in range(0,np):
 			l.append((corpus,i,np))
+		curr=time.time()
 		result=p.map(_compress_file,l)
+		print "compress time ", time.time()-curr
+		curr=time.time()
 		final=set()
 		for re in result:
 			final=final.union(re)
+		print "union time ",time.time()-curr
 		return final
 
 
