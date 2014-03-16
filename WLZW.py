@@ -3,6 +3,7 @@ import os
 from multiprocessing import Pool
 import copy_reg 
 import time
+import concurrent.futures
 #To construct WLZW
 #Dictionary is returned which is the hot pattern
 #Dictionary started with empty set
@@ -70,7 +71,11 @@ class WLZWCompressor:
 		if np==1:
 			return result.next()
 		else:
-			final_set=_union(result)
+#			final_set=_union(result)
+			l=[]
+			for i in range(0,np):
+				l.append(set(result.next()))
+			final_set=_union_binary_tree(l,np)
 #			unit=4
 #			new_result=[]
 #			i=0
@@ -102,6 +107,36 @@ def _union(l):
 	for re in l:
 		result = result | set(re)
 	return result
+
+def _union_recur(l):
+	if len(l)==2:
+		return l[1] | l[0]
+	return _union_recur(l[0:len(l)/2]) | _union_recur(l[len(l)/2:len(l)])
+
+def _union_binary_tree(l,np):
+	curr=l
+	print 'np: ',np
+	while len(curr)>1:
+		new=[]
+		for i in range(0,len(curr),2):
+			new.append(curr[i:i+2])
+		print len(new)
+		ct=time.time()
+		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
+			result=executor.map(_union_two,new)
+		print "map: ", time.time()-ct
+		ct=time.time()
+		curr=result
+#		for re in result:
+#			curr.append(re)
+		print "append: ",time.time()-ct
+	return curr[0]
+
+def _union_two(l):
+	curr=time.time()
+	re=l[0] | l[1]
+	print time.time()-curr
+	return re
 
 def _union_list(l):
 	result=[]

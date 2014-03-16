@@ -38,7 +38,7 @@ def test_freq_file(word_file,text_file):
 def test_parallel(p):
 #	curr=time.time()
 	compressor=WLZWCompressor()
-	result=compressor.compress_file('test',p)
+	result=compressor.compress_file('kb.txt',p)
 #	print "compress time in test", time.time()-curr
 #	curr=time.time()
 	f=open('result','w')
@@ -55,15 +55,15 @@ def test_parallel(p):
 #start=time.time()
 #test_parallel(2)
 #print "2: ",time.time()-start
-#start=time.time()
-#test_parallel(4)
-#print "4: ",time.time()-start
-#start=time.time()
-#test_parallel(8)
-#print "8: ",time.time()-start
+start=time.time()
+test_parallel(4)
+print "4: ",time.time()-start
+start=time.time()
+test_parallel(8)
+print "8: ",time.time()-start
 start=time.time()
 test_parallel(16)
 print "16: ",time.time()-start
-start=time.time()
-test_parallel(32)
-print "32: ",time.time()-start
+#start=time.time()
+#test_parallel(32)
+#print "32: ",time.time()-start
