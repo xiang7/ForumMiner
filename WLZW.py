@@ -124,12 +124,12 @@ def _union_binary_tree(l,np):
 		ct=time.time()
 		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
 			result=executor.map(_union_two,new)
-		print "map: ", time.time()-ct
-		ct=time.time()
-		curr=result
-#		for re in result:
-#			curr.append(re)
-		print "append: ",time.time()-ct
+			print "map: ", time.time()-ct
+			ct=time.time()
+			curr=[]
+			for re in result:
+				curr.append(re)
+			print "append: ",time.time()-ct
 	return curr[0]
 
 def _union_two(l):
