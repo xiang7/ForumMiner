@@ -64,18 +64,23 @@ class WLZWCompressor:
 		for i in range(0,np):
 			l.append((corpus,i,np))
 #		curr=time.time()
-		result=[]
+#		result=[]
 		result=p.imap_unordered(_compress_file,l,1)
+#		with concurrent.futures.ProcessPoolExecutor(max_workers=np) as executor:
+#			result=executor.map(_compress_file,l)
 #		print "compress time ", time.time()-curr
 #		curr=time.time()
 		if np==1:
-			return result.next()
+			final_set=result.next()
 		else:
-#			final_set=_union(result)
-			l=[]
-			for i in range(0,np):
-				l.append(set(result.next()))
-			final_set=_union_binary_tree(l,np)
+			final_set=_union(result)
+#			l=[]
+#				for i in range(0,np):
+#					l.append(set(result.next()))
+#			for re in result:
+#				l.append(set(re))
+#			final_set=_union(l)
+		return final_set
 #			unit=4
 #			new_result=[]
 #			i=0
@@ -91,7 +96,6 @@ class WLZWCompressor:
 #			final_set=_union(r)
 		#final_set=set(final)
 #		print "union time ",time.time()-curr
-			return final_set
 			
 
 	def get_dict(self):	
@@ -115,27 +119,28 @@ def _union_recur(l):
 
 def _union_binary_tree(l,np):
 	curr=l
-	print 'np: ',np
+#	print 'np: ',np
 	while len(curr)>1:
 		new=[]
 		for i in range(0,len(curr),2):
 			new.append(curr[i:i+2])
-		print len(new)
-		ct=time.time()
+#		print len(new)
+#		ct=time.time()
 		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
 			result=executor.map(_union_two,new)
-			print "map: ", time.time()-ct
-			ct=time.time()
+#			print "map: ", time.time()-ct
+#			ct=time.time()
 			curr=[]
 			for re in result:
 				curr.append(re)
-			print "append: ",time.time()-ct
+#			print "append: ",time.time()-ct
 	return curr[0]
 
 def _union_two(l):
-	curr=time.time()
+#	curr=time.time()
 	re=l[0] | l[1]
-	print time.time()-curr
+#	print len(re)
+#	print time.time()-curr
 	return re
 
 def _union_list(l):

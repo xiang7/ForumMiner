@@ -52,9 +52,9 @@ def test_parallel(p):
 #start=time.time()
 #test_parallel(1)
 #print "1: ",time.time()-start
-#start=time.time()
-#test_parallel(2)
-#print "2: ",time.time()-start
+start=time.time()
+test_parallel(2)
+print "2: ",time.time()-start
 start=time.time()
 test_parallel(4)
 print "4: ",time.time()-start
@@ -64,6 +64,6 @@ print "8: ",time.time()-start
 start=time.time()
 test_parallel(16)
 print "16: ",time.time()-start
-#start=time.time()
-#test_parallel(32)
-#print "32: ",time.time()-start
+start=time.time()
+test_parallel(32)
+print "32: ",time.time()-start
