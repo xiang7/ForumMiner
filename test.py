@@ -17,14 +17,10 @@ def test_compress():
 def test_freq(filename,outputfile):
 	prev=time.time()
 	compressor=WLZWCompressor()
-	with open(filename,'r') as f:
-		for line in f:
-			s=line.split('$')
-			compressor.compress('$'.join(s[1:]))
-	k=compressor.get_pattern()
+	k=compressor.compress_file(filename,4)
 	print "compress, ",time.time()-prev
 	prev=time.time()
-	fe=FreqEst(k)
+	fe=FreqEst(list(k))
 	fe.search_file(filename)
 	fe.export_to_file(outputfile)
 	print 'freq, ',time.time()-prev

@@ -57,7 +57,7 @@ class WLZWCompressor:
 	
 	#corpus: file name
 	#p: number of processes
-	def compress_file(self,corpus, np,separator=None):
+	def compress_file(self,corpus, np=4,separator=None):
 		"""construct WLZW pattern out of a corpus, parallelism is an option"""
 		p=Pool(processes=np)
 		l=[]

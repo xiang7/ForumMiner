@@ -2,13 +2,18 @@
 #assume the raw text format is <DOCID Separator Document>
 from acora import AcoraBuilder
 from NgramEntry import NgramEntry
+import time
+
 
 class FreqEst:
 	
 	def __init__(self,key_list,separator='$'):
-		self._key_list=key_list
+		print len(key_list)
+		self._key_list=key_list[1:500]
+		prev=time.time()
 		self._builder = AcoraBuilder(self._key_list)
 		self._ac = self._builder.build()
+		print "build automata: ", time.time()-prev
 		self._table = dict()
 		self._N=0 #total number of documents
 		self._separator=separator
@@ -41,7 +46,7 @@ class FreqEst:
 			if w not in ngrams:
 				self._table[w].df+=1
 				ngrams.add(w)
-			self._table[w].position.append((docid,str(f),str(f+len(w))))
+			self._table[w].position.append(docid+":"+str(f))
 
 	#search a list
 	def search_list(self,text_list):
@@ -69,9 +74,5 @@ class FreqEst:
 				ridf=0.0
 				#compute mi TODO
 				mi=0.0
-				#construct the position string
-				position=[]
-				for t in item.position:
-					position.append("%s: [%s,%s]" %(t[0],t[1],t[2]))
-				f.write("%d|%d|{\"TF_IDF\":%f,\"MI\":%f,\"RIDF\":%f}|%s|{%s}\n" % (item.tf,item.df,tfidf,mi,ridf,k,",".join(position)))
+				f.write("%d|%d|{\"TF_IDF\":%f,\"MI\":%f,\"RIDF\":%f}|%s|{%s}\n" % (item.tf,item.df,tfidf,mi,ridf,k,",".join(item.position)))
 		

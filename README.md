@@ -5,6 +5,8 @@ ForumMiner
 Current task:
 =============
 
+Make FreqEst scalable
+
 
 Future task:
 =============
@@ -27,6 +29,12 @@ Run the algorithms on large datasets and get some statistics on system scalabili
 
 Questions:
 =========
+
+Scalability of the frequency counting. Takes long time to build automata from dictionary. Takes about 8s to build one for 100 words, 70s for 500 words and 200s for 1000 words. 
+
+Is it because I used a character level Aho-Corasick Algorithm implementation? 
+
+Do we need to skip some words during WLZW like stop words or very long words?
 
 TF-IDF and RIDF, the TF means the total frequency of a Ngram?
 MI? For any two words?
