@@ -57,12 +57,12 @@ class WLZWCompressor:
 	
 	#corpus: file name
 	#p: number of processes
-	def compress_file(self,corpus, np):
+	def compress_file(self,corpus, np,separator=None):
 		"""construct WLZW pattern out of a corpus, parallelism is an option"""
 		p=Pool(processes=np)
 		l=[]
 		for i in range(0,np):
-			l.append((corpus,i,np))
+			l.append((corpus,i,np,separator))
 #		curr=time.time()
 #		result=[]
 		result=p.imap_unordered(_compress_file,l,1)
@@ -161,6 +161,7 @@ def _compress_file(tup):
 	filename=tup[0]
 	rank=tup[1]
 	p=tup[2]
+	separator=tup[3]
 	f=open(filename,'r')
 	s=os.path.getsize(filename)
 	wlzw=WLZWCompressor()
@@ -169,6 +170,9 @@ def _compress_file(tup):
 		f.seek(s/p*rank)
 		f.readline()
 	for line in f:
+		if separator!=None:
+			s=line.split(separator)
+			line=separator.join(s[1:])
 		sents=tokenizer.tokenize(line)
 		for sent in sents:
 			wlzw.compress_sent(sent)

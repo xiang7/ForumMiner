@@ -14,15 +14,20 @@ def test_compress():
 
 ###############test for FreqEst
 #s='a b c a b c a b c'
-def test_freq():
+def test_freq(filename,outputfile):
+	prev=time.time()
 	compressor=WLZWCompressor()
-	compressor.compress(s)
+	with open(filename,'r') as f:
+		for line in f:
+			s=line.split('$')
+			compressor.compress('$'.join(s[1:]))
 	k=compressor.get_pattern()
+	print "compress, ",time.time()-prev
+	prev=time.time()
 	fe=FreqEst(k)
-	fe.search(s)
-	sorted_x = sorted(fe.get_freq().iteritems(), key=operator.itemgetter(1))
-	for a,b in sorted_x:
-		print a,b
+	fe.search_file(filename)
+	fe.export_to_file(outputfile)
+	print 'freq, ',time.time()-prev
 
 def test_freq_file(word_file,text_file):
 	word_list=[]
@@ -47,23 +52,23 @@ def test_parallel(p):
 	f.close()
 #	print "write time ",time.time()-curr
 
-#test_freq()
+test_freq("kb.txt","result")
 
 #start=time.time()
 #test_parallel(1)
 #print "1: ",time.time()-start
-start=time.time()
-test_parallel(2)
-print "2: ",time.time()-start
-start=time.time()
-test_parallel(4)
-print "4: ",time.time()-start
-start=time.time()
-test_parallel(8)
-print "8: ",time.time()-start
-start=time.time()
-test_parallel(16)
-print "16: ",time.time()-start
-start=time.time()
-test_parallel(32)
-print "32: ",time.time()-start
+#start=time.time()
+#test_parallel(2)
+#print "2: ",time.time()-start
+#start=time.time()
+#test_parallel(4)
+#print "4: ",time.time()-start
+#start=time.time()
+#test_parallel(8)
+#print "8: ",time.time()-start
+#start=time.time()
+#test_parallel(16)
+#print "16: ",time.time()-start
+#start=time.time()
+#test_parallel(32)
+#print "32: ",time.time()-start
