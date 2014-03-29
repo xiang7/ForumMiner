@@ -1,6 +1,6 @@
 #estimates frequency of key words given a text, output is a dictionary with <Ngram, NgramEntry>
 #assume the raw text format is <DOCID Separator Document>
-from acora import AcoraBuilder
+import esm
 from NgramEntry import NgramEntry
 import time
 
@@ -9,10 +9,12 @@ class FreqEst:
 	
 	def __init__(self,key_list,separator='$'):
 		print len(key_list)
-		self._key_list=key_list[1:500]
+		self._key_list=key_list
 		prev=time.time()
-		self._builder = AcoraBuilder(self._key_list)
-		self._ac = self._builder.build()
+		self._index = esm.Index()
+		for r in self._key_list:
+			self._index.enter(r)
+		self._index.fix()
 		print "build automata: ", time.time()-prev
 		self._table = dict()
 		self._N=0 #total number of documents
@@ -36,7 +38,7 @@ class FreqEst:
 		ngrams=set()
 		#search the document
 		#no need to chop the document into sentence since all ngrams are obtained after document is chopped into sentence. so not possible to match ngram across sentences
-		for w, f in self._ac.findall(text):
+		for (f,e),w in self._index.query(text):
 			if (f!=0 and (not self._isBlankSpace(text[f-1]))) or (f+len(w)<len(text) and (not self._isBlankSpace(text[f+len(w)]))):
 				continue
 			if w not in self._table:
