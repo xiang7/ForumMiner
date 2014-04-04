@@ -1,5 +1,7 @@
 from WLZW import WLZWCompressor
 from FreqEst import FreqEst 
+from NgramEntry import NgramEntry
+from SQLiteWrapper import SQLiteWrapper
 import operator
 import time
 ###############test for WLZW
@@ -20,7 +22,7 @@ def test_freq(filename,outputfile):
 	k=compressor.compress_file(filename,4)
 	print "compress, ",time.time()-prev
 	prev=time.time()
-	fe=FreqEst(list(k))
+	fe=FreqEst(list(k)[1:10000])
 	fe.search_file(filename)
 	fe.export_to_file(outputfile)
 	print 'freq, ',time.time()-prev
@@ -48,7 +50,22 @@ def test_parallel(p):
 	f.close()
 #	print "write time ",time.time()-curr
 
-test_freq("kb.txt","result")
+def test_sql_wraper(filename):
+	l=[]
+	with open(filename,'r') as f:
+		for line in f:
+			entry=NgramEntry()
+			entry.from_str(line)
+			l.append(entry)
+	wraper=SQLiteWrapper()
+	wraper.insert_many_entry(l)
+	entry=wraper.select_ngram('about whether it')
+	print entry.to_str()
+	
+	
+
+test_sql_wraper('result')
+#test_freq("kb.txt","result")
 
 #start=time.time()
 #test_parallel(1)

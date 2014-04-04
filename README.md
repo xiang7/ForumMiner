@@ -4,8 +4,7 @@ ForumMiner
 
 Current task:
 =============
-
-Make FreqEst scalable
+implement MI
 
 
 Future task:

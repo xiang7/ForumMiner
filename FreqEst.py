@@ -3,6 +3,7 @@
 import esm
 from NgramEntry import NgramEntry
 import time
+import math
 
 
 class FreqEst:
@@ -70,11 +71,12 @@ class FreqEst:
 		with open(filename,'w') as f:
 			for k in keys:
 				item=self._table[k]
-				#compute tf-idf TODO
-				tfidf=0.0
-				#compute ridf TODO
-				ridf=0.0
+				#compute tf-idf, implemented as TF(t,D)*IDF(t,D), where t is the term and D is the corpus
+				tfidf=item.tf*math.log(float(self._N)/float(item.df))
+				#compute ridf
+				ridf=math.log(float(self._N)/float(item.df))+math.log(1-math.exp(-float(item.tf)/float(self._N)))
 				#compute mi TODO
 				mi=0.0
-				f.write("%d|%d|{\"TF_IDF\":%f,\"MI\":%f,\"RIDF\":%f}|%s|{%s}\n" % (item.tf,item.df,tfidf,mi,ridf,k,",".join(item.position)))
+				item.importance=[tfidf,mi,ridf]
+				f.write(item.to_str()+'\n')
 		
