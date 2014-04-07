@@ -14,9 +14,8 @@ class WLZWCompressor:
 	
 	def __init__(self):
 		# Build the dictionary.
-		self._dict_size = 0 #256
-		self._dictionary = dict()# dict((chr(i), chr(i)) for i in xrange(dict_size))
-		# in Python 3: dictionary = {chr(i): chr(i) for i in range(dict_size)}
+		self._dict_size = 0
+		self._dictionary = dict()
 
 	def compress_sent(self,uncompressed):
 		"""construct the dictionary using the sentence. dictionary is shared on same object accross multiple calls. this assumes single sentence to be passed"""
@@ -24,7 +23,6 @@ class WLZWCompressor:
 		s=uncompressed.split() #using simple white space split for now
 		 
 		w = ""
-		#result = []
 		for c in s:
 			#add all the unigrams into the dictionary
 			if c not in self._dictionary:
@@ -34,17 +32,11 @@ class WLZWCompressor:
 			if wc.strip() in self._dictionary:
 				w = wc
 			else:
-				#result.append(dictionary[w])
 				# Add wc to the dictionary.
 				self._dictionary[wc.strip()] = self._dict_size
 				self._dict_size += 1
 				w = c
 		 
-		# Output the code for w.
-		#if w:
-		#	result.append(dictionary[w])
-		#return result
-	
 	
 	def compress(self,uncompressed):
 		"""construct the dictionary for a chunk of text"""
@@ -59,43 +51,23 @@ class WLZWCompressor:
 	#p: number of processes
 	def compress_file(self,corpus, np=4,separator=None):
 		"""construct WLZW pattern out of a corpus, parallelism is an option"""
+
+		#if only one process, no need for parallelization
+		if np==1:
+			return _compress_file(corpus,0,np)
+
 		p=Pool(processes=np)
 		l=[]
 		for i in range(0,np):
 			l.append((corpus,i,np,separator))
-#		curr=time.time()
-#		result=[]
 		result=p.imap_unordered(_compress_file,l,1)
-#		with concurrent.futures.ProcessPoolExecutor(max_workers=np) as executor:
-#			result=executor.map(_compress_file,l)
-#		print "compress time ", time.time()-curr
-#		curr=time.time()
+
 		if np==1:
 			final_set=result.next()
 		else:
 			final_set=_union(result)
-#			l=[]
-#				for i in range(0,np):
-#					l.append(set(result.next()))
-#			for re in result:
-#				l.append(set(re))
-#			final_set=_union(l)
+
 		return final_set
-#			unit=4
-#			new_result=[]
-#			i=0
-#			while i<np:
-#				temp=[]
-#				for j in range(0,unit):
-#					temp.append(result.next())
-#				i+=unit
-#				print "temp ",len(temp)
-#				new_result.append(temp)
-#			print "new_result",len(new_result)
-#			r=p.imap_unordered(_union,new_result,1)
-#			final_set=_union(r)
-		#final_set=set(final)
-#		print "union time ",time.time()-curr
 			
 
 	def get_dict(self):	
@@ -119,28 +91,19 @@ def _union_recur(l):
 
 def _union_binary_tree(l,np):
 	curr=l
-#	print 'np: ',np
 	while len(curr)>1:
 		new=[]
 		for i in range(0,len(curr),2):
 			new.append(curr[i:i+2])
-#		print len(new)
-#		ct=time.time()
 		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
 			result=executor.map(_union_two,new)
-#			print "map: ", time.time()-ct
-#			ct=time.time()
 			curr=[]
 			for re in result:
 				curr.append(re)
-#			print "append: ",time.time()-ct
 	return curr[0]
 
 def _union_two(l):
-#	curr=time.time()
 	re=l[0] | l[1]
-#	print len(re)
-#	print time.time()-curr
 	return re
 
 def _union_list(l):
@@ -156,8 +119,8 @@ def _compress_chunk(chunk):
 		wlzw.compress(line)
 	return set(wlzw.get_pattern())
 
+#compress function used for map (shared memory parallelization). 
 def _compress_file(tup):
-#	curr=time.time()
 	filename=tup[0]
 	rank=tup[1]
 	p=tup[2]
@@ -179,5 +142,4 @@ def _compress_file(tup):
 		if f.tell()>=s/p*(rank+1):
 			break
 	result=wlzw.get_pattern()
-#	print "in compress file: ",time.time()-curr
 	return result
