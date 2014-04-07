@@ -44,7 +44,7 @@ def test_parallel(p):
 	result=compressor.compress_file('kb.txt',p)
 #	print "compress time in test", time.time()-curr
 #	curr=time.time()
-	f=open('result','w')
+	f=open('wlzw_out_shared','w')
 	for re in result:
 		f.write(re+'\n')
 	f.close()
@@ -64,15 +64,15 @@ def test_sql_wraper(filename):
 	
 	
 
-test_sql_wraper('result')
+#test_sql_wraper('result')
 #test_freq("kb.txt","result")
 
 #start=time.time()
 #test_parallel(1)
 #print "1: ",time.time()-start
-#start=time.time()
-#test_parallel(2)
-#print "2: ",time.time()-start
+start=time.time()
+test_parallel(2)
+print "2: ",time.time()-start
 #start=time.time()
 #test_parallel(4)
 #print "4: ",time.time()-start

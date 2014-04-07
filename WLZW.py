@@ -54,7 +54,7 @@ class WLZWCompressor:
 
 		#if only one process, no need for parallelization
 		if np==1:
-			return _compress_file(corpus,0,np)
+			return set(_compress_file((corpus,0,np,separator)))
 
 		p=Pool(processes=np)
 		l=[]
