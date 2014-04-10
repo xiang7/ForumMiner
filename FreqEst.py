@@ -7,8 +7,17 @@ import math
 
 
 class FreqEst:
+	"""This is the class to count frequency of patterns from a corpus. 
+	It also computes importance metrics, RIDF, TFIDF, MI.
+	It operates on one set of patterns. 
+	Multiple calls of search functions can be called on different strings/corpus.
+	Dictionary persists across these search calls.
+	Call export to file or get frequency to retrieve the results"""
 	
 	def __init__(self,key_list,separator='$'):
+		"""Initialize the estimator.
+		@param key_list - a list of patterns, the estimator will search on this list of patterns
+		@param separator - the separator string that separates doc id and documents"""
 		print len(key_list)
 		self._key_list=key_list
 		prev=time.time()
@@ -27,6 +36,9 @@ class FreqEst:
 
 	#search a document
 	def search(self, text):
+		"""Search a document
+		@param text - the string to be searched
+		@return None - call get freq or export to file"""
 		#increment total number of documents
 		self._N+=1
 
@@ -53,20 +65,33 @@ class FreqEst:
 
 	#search a list
 	def search_list(self,text_list):
+		"""Search a list of documents
+		@param text_list - a list of strings
+		@return None - call get freq or export to file"""
 		for l in text_list:
 			self.search(l)
 
 	#search a file
 	def search_file(self,filename):
+		"""Search a file
+		@param filename - the path to the file
+		@return None, call get freq or export to file
+		"""
 		f=open(filename,'r')
 		for line in f:
 			self.search(line)
 
 	def get_freq(self):
+		"""Get the match results
+		@return table, <ngram (string), NgramEntry>, see definition of NgramEntry"""
 		return self._table
 
 	#export the resulting dictionary into a file
 	def export_to_file(self,filename):
+		"""Export the search result to file
+		@filename - string, output file path
+		@return None
+		"""
 		keys = self._table.keys()
 		with open(filename,'w') as f:
 			for k in keys:

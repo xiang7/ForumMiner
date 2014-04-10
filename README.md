@@ -6,7 +6,7 @@ Current task:
 =============
 implement MI
 
-implememt distributed parallel model of WLZW
+implememt distributed and shared parallel model of importance ranking
 
 
 Future task:
@@ -34,3 +34,21 @@ Questions:
 MI? For any two words?
 
 may need to add update to SQLite wrapper later
+
+References:
+==========
+Tag list of doxygen
+
+@author
+@brief
+@bug
+@code and @endcode
+@date
+@file
+@package
+@param
+@return
+@see
+@todo
+@version
+@warning

@@ -1,4 +1,6 @@
 from WLZW import WLZWCompressor
+from WLZW import DistributedWLZW
+from WLZW import ParallelWLZW
 from FreqEst import FreqEst 
 from NgramEntry import NgramEntry
 from SQLiteWrapper import SQLiteWrapper
@@ -40,7 +42,7 @@ def test_freq_file(word_file,text_file):
 
 def test_parallel(p):
 #	curr=time.time()
-	compressor=WLZWCompressor()
+	compressor=ParallelWLZW()
 	result=compressor.compress_file('kb.txt',p)
 #	print "compress time in test", time.time()-curr
 #	curr=time.time()
@@ -61,18 +63,30 @@ def test_sql_wraper(filename):
 	wraper.insert_many_entry(l)
 	entry=wraper.select_ngram('about whether it')
 	print entry.to_str()
-	
-	
+
+def test_distributed_wlzw():
+	#test:
+	curr=time.time()
+	dwlzw=DistributedWLZW()
+	final=dwlzw.compress_file('kb.txt')
+	print len(final)
+	print time.time()-curr
+
 
 #test_sql_wraper('result')
 #test_freq("kb.txt","result")
+test_distributed_wlzw()
+"""
+The class for WLZW Compressor. 
 
+This class takes in text as string or file and runs WLZW on it. Upon completion, the dictionary can be obtained.
+"""
 #start=time.time()
 #test_parallel(1)
 #print "1: ",time.time()-start
-start=time.time()
-test_parallel(2)
-print "2: ",time.time()-start
+#start=time.time()
+#test_parallel(2)
+#print "2: ",time.time()-start
 #start=time.time()
 #test_parallel(4)
 #print "4: ",time.time()-start
