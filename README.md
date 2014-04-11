@@ -4,8 +4,6 @@ ForumMiner
 
 Current task:
 =============
-implement MI
-
 implememt distributed and shared parallel model of importance ranking
 
 
@@ -30,8 +28,6 @@ Run the algorithms on large datasets and get some statistics on system scalabili
 
 Questions:
 =========
-
-MI? For any two words?
 
 may need to add update to SQLite wrapper later
 

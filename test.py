@@ -21,7 +21,8 @@ def test_compress():
 def test_freq(filename,outputfile):
 	prev=time.time()
 	compressor=WLZWCompressor()
-	k=compressor.compress_file(filename,4)
+	compressor.compress_file(filename)
+	k=compressor.get_pattern()
 	print "compress, ",time.time()-prev
 	prev=time.time()
 	fe=FreqEst(list(k)[1:10000])
@@ -74,8 +75,8 @@ def test_distributed_wlzw():
 
 
 #test_sql_wraper('result')
-#test_freq("kb.txt","result")
-test_distributed_wlzw()
+test_freq("kb.txt","result")
+#test_distributed_wlzw()
 """
 The class for WLZW Compressor. 
 

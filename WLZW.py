@@ -5,7 +5,7 @@ import copy_reg
 import time
 import concurrent.futures
 from mpi4py import MPI
-from Split import Split
+from Tool import Split
 import os
 import tempfile
 

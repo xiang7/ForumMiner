@@ -84,6 +84,10 @@ class FreqEst:
 	def get_freq(self):
 		"""Get the match results
 		@return table, <ngram (string), NgramEntry>, see definition of NgramEntry"""
+		#compute importance
+		for k in self._table.keys():
+			item=self._table[k]
+			self._table[k].importance=self.compute_importance(item)
 		return self._table
 
 	#export the resulting dictionary into a file
@@ -96,12 +100,44 @@ class FreqEst:
 		with open(filename,'w') as f:
 			for k in keys:
 				item=self._table[k]
-				#compute tf-idf, implemented as TF(t,D)*IDF(t,D), where t is the term and D is the corpus
-				tfidf=item.tf*math.log(float(self._N)/float(item.df))
-				#compute ridf
-				ridf=math.log(float(self._N)/float(item.df))+math.log(1-math.exp(-float(item.tf)/float(self._N)))
-				#compute mi TODO
-				mi=0.0
-				item.importance=[tfidf,mi,ridf]
+				#compute importance
+				item.importance=self.compute_importance(item)
 				f.write(item.to_str()+'\n')
-		
+
+	def compute_importance(self, item):
+		#compute tf-idf, implemented as TF(t,D)*IDF(t,D), where t is the term and D is the corpus
+		tfidf=item.tf*math.log(float(self._N)/float(item.df))
+		#compute ridf
+		ridf=math.log(float(self._N)/float(item.df))+math.log(1-math.exp(-float(item.tf)/float(self._N)))
+		#compute mi
+		words=item.ngram.split(' ')
+		mi=0.0
+		if len(words)==1: #if unigram
+			mi=math.log(1.0/float(item.tf))
+		elif len(words)==2: #if bigram
+			tf1=1
+			tf2=1
+			if words[0] in self._table:
+				tf1=self._table[words[0]].tf
+			if words[1] in self._table:
+				tf2=self._table[words[1]].tf
+			mi=math.log(float(item.tf)/float(tf1)/float(tf2))
+		else: #trigram and up
+			wlen=len(words)
+			xy=' '.join(words[0:wlen-1])
+			yz=' '.join(words[1:wlen])
+			y=' '.join(words[1:wlen-1])
+			tfxyz=item.tf
+			tfxy=1
+			if xy in self._table:
+				tfxy=self._table[xy].tf
+			tfyz=1
+			if yz in self._table:
+				tfyz=self._table[yz].tf
+			tfy=1
+			if y in self._table:
+				tfy=self._table[y].tf
+			mi=math.log(float(tfxyz)*float(tfy)/float(tfxy)/float(tfyz))
+		#put the importance metrics together
+		return [tfidf,mi,ridf]
+	
