@@ -74,8 +74,8 @@ def test_distributed_wlzw():
 	print time.time()-curr
 
 
-#test_sql_wraper('result')
-test_freq("kb.txt","result")
+test_sql_wraper('result')
+#test_freq("kb.txt","result")
 #test_distributed_wlzw()
 """
 The class for WLZW Compressor. 

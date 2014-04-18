@@ -4,6 +4,8 @@ ForumMiner
 
 Current task:
 =============
+POS - wait for rahul's reply
+
 implememt distributed and shared parallel model of importance ranking
 
 

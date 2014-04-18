@@ -17,7 +17,7 @@ class SQLiteWrapper:
 		self._create_table()
 
 	def _create_table(self):
-		self._c.execute('''CREATE TABLE IF NOT EXISTS ngram (ngram text primary key, tf real, df real, importance text, position text)''')
+		self._c.execute('''CREATE TABLE IF NOT EXISTS ngram (ngram text primary key, tf real, df real, importance text, position text, pos text)''')
 
 	#pass NgramEntry, insert single entry
 	def insert_entry(self,entry):
@@ -31,7 +31,7 @@ class SQLiteWrapper:
 		#convert position into text
 		position_str=entry.position_str()
 		#insert into db
-		self._c.execute('''INSERT OR REPLACE INTO ngram (ngram, tf, df, importance, position) VALUES (?,?,?,?,?)''',(entry.ngram,entry.tf,entry.df,importance_str,position_str))
+		self._c.execute('''INSERT OR REPLACE INTO ngram (ngram, tf, df, importance, position, pos) VALUES (?,?,?,?,?,?)''',(entry.ngram,entry.tf,entry.df,importance_str,position_str,entry.pos))
 		self._conn.commit()
 
 	
@@ -44,8 +44,8 @@ class SQLiteWrapper:
 		"""
 		l=[]
 		for entry in entry_list:
-			l.append((entry.ngram,entry.tf,entry.df,entry.importance_str(),entry.position_str()))
-		self._c.executemany('''INSERT OR REPLACE INTO ngram (ngram, tf, df, importance, position) VALUES (?,?,?,?,?)''',l)
+			l.append((entry.ngram,entry.tf,entry.df,entry.importance_str(),entry.position_str(),entry.pos))
+		self._c.executemany('''INSERT OR REPLACE INTO ngram (ngram, tf, df, importance, position, pos) VALUES (?,?,?,?,?,?)''',l)
 		self._conn.commit()
 
 	#pass a ngram string, return a entry
@@ -63,10 +63,26 @@ class SQLiteWrapper:
 		entry.importance_from_str(s[3])
 		entry.ngram=s[0]
 		entry.position_from_str(s[4])
+		entry.pos=s[5]
 		return entry
+
+	def select_many_ngrams(self,l):
+		"""Select an list of ngrams from the database
+		@param l - the list of ngrams
+		@return list of NgramEntry"""
+		result=[]
+		for ngram in l:
+			result.append(self.select_ngram(ngram))
+		return result
 
 	def close(self):
 		"""Close the database connection.
 		Should be called when finish using this wrapper.
 		@return None"""
 		self._c.close()
+	
+	def update_pos(self,entry):
+		"""Update the pos of an entry.
+		@param entry - the ngram whose pos is to be updated
+		@return None"""
+		self.insert_entry(entry)

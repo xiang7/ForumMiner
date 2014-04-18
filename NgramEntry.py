@@ -20,19 +20,21 @@ class NgramEntry:
 	ngram - ngram (string)
 
 	position - position information (list(string, string, ...)) each string is "doc id:start position"
+
+	pos - part of speech tag, string
 	
 	It also includes utilities to convert importance to/from string, position to/from string
 
 	The object can be turned into a string. Utilities for convert the object to/from string is also provided.
 	The string is formated as follows (suppose '|' is used as separator):
-	Term Frequency | Document Frequency | Importance | N-gram | Positional information
+	Term Frequency | Document Frequency | Importance | N-gram | Positional information | pos
 	where importance is {"TF-IDF": value, "MI": value, "RIDF": value}
 	positional information is {doc_id: begin position, doc_id: begin position, ...}
 
 	The separator can be specified by variable separator
 	"""
 	
-	def __init__(self,ngram="",tf=0,df=0,importance=[0,0,0],position=None):
+	def __init__(self,ngram="",tf=0,df=0,importance=[0,0,0],position=None,pos=""):
 		"""Constructor giving the chance to specify the individual info. 
 		@param ngram - string, the ngram itself
 		@param tf - int, term frequency
@@ -43,6 +45,7 @@ class NgramEntry:
 		self.tf=tf
 		self.df=df
 		self.importance=importance
+		self.pos=pos
 		self.separator='||||'
 		if position==None:
 			self.position=[]
@@ -86,6 +89,8 @@ class NgramEntry:
 		self.ngram=s[3]
 		self.importance_from_str(s[2])
 		self.position_from_str(s[4])
+		if len(s)>=6:
+			self.pos=s[5]
 
 	def to_str(self):
 		"""Convert the object to String
@@ -97,4 +102,5 @@ class NgramEntry:
 		l.append(self.importance_str())
 		l.append(self.ngram)
 		l.append(self.position_str())
+		l.append(self.pos)
 		return self.separator.join(l)
