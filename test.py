@@ -65,6 +65,12 @@ def test_sql_wraper(filename):
 	entry=wraper.select_ngram('about whether it')
 	print entry.to_str()
 
+def test_sql_filter():
+	wraper=SQLiteWrapper()
+	re=wraper.select_criteria(mi_upper=2,mi_lower=0)
+	for en in re:
+		print en.to_str()
+
 def test_distributed_wlzw():
 	#test:
 	curr=time.time()
@@ -73,8 +79,8 @@ def test_distributed_wlzw():
 	print len(final)
 	print time.time()-curr
 
-
-test_sql_wraper('result')
+#test_sql_filter()
+#test_sql_wraper('result')
 #test_freq("kb.txt","result")
 #test_distributed_wlzw()
 """

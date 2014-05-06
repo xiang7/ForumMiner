@@ -1,4 +1,5 @@
 import nltk
+import sys
 import os
 from multiprocessing import Pool
 import copy_reg 
@@ -8,6 +9,7 @@ from mpi4py import MPI
 from Tool import Split
 import os
 import tempfile
+import argparse
 
 #To construct WLZW
 #Dictionary is returned which is the hot pattern
@@ -297,3 +299,48 @@ def _compress_file(tup):
 			break
 	result=wlzw.get_pattern()
 	return result
+
+
+#command line support
+#the following provide support for calling from command line
+if __name__=='__main__':
+	parser=argparse.ArgumentParser(description='WLZW algorithm. Extract frequent patters from a corpus. Parallelizm supported.')
+	parser.add_argument('-i',help='input file (corpus)',required=True)
+	parser.add_argument('-np',type=int,help='number of processes (default to 1)')
+	parser.add_argument('-o', help='output file (of frequent patterns), default to stdout')
+
+	#parse args
+	args,unknown = parser.parse_known_args(sys.argv)
+
+	#test if file exist
+	if not os.path.isfile(args.i):
+		print 'Input file does not exist'
+		exit(0)
+
+	#number of process
+	np=1
+	if args.np!=None and args.np>0:
+		np=args.np
+
+	#open output file
+	outputfile=sys.stdout
+	if args.o!=None:
+		outputfile=open(args.o,'w')
+
+	patterns=[]
+
+	# 1 process
+	if np==1:
+		compressor=WLZWCompressor()
+		compressor.compress_file(args.i)
+		patterns=compressor.get_pattern()
+
+	# >1 process
+	else:
+		compressor=ParallelWLZW()
+		patterns=compressor.compress_file(args.i,np)
+
+	for p in patterns:
+		outputfile.write(p.strip()+'\n')
+	outputfile.close()
+

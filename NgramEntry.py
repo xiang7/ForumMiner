@@ -22,6 +22,8 @@ class NgramEntry:
 	position - position information (list(string, string, ...)) each string is "doc id:start position"
 
 	pos - part of speech tag, string
+
+	tag - ta of the phrase (class), string
 	
 	It also includes utilities to convert importance to/from string, position to/from string
 
@@ -34,7 +36,7 @@ class NgramEntry:
 	The separator can be specified by variable separator
 	"""
 	
-	def __init__(self,ngram="",tf=0,df=0,importance=[0,0,0],position=None,pos=""):
+	def __init__(self,ngram="",tf=0,df=0,importance=[0,0,0],position=None,pos="",tag=""):
 		"""Constructor giving the chance to specify the individual info. 
 		@param ngram - string, the ngram itself
 		@param tf - int, term frequency
@@ -46,6 +48,7 @@ class NgramEntry:
 		self.df=df
 		self.importance=importance
 		self.pos=pos
+		self.tag=tag
 		self.separator='||||'
 		if position==None:
 			self.position=[]
@@ -91,6 +94,8 @@ class NgramEntry:
 		self.position_from_str(s[4])
 		if len(s)>=6:
 			self.pos=s[5]
+		if len(s)>=7:
+			self.tag=s[6]
 
 	def to_str(self):
 		"""Convert the object to String
@@ -103,4 +108,5 @@ class NgramEntry:
 		l.append(self.ngram)
 		l.append(self.position_str())
 		l.append(self.pos)
+		l.append(self.tag)
 		return self.separator.join(l)
