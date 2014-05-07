@@ -7,12 +7,7 @@ Current task:
 
 test setup script on windows and linux
 
-write command line support on py files (now written: WLZW.py, FreqEst.py, SQLiteWrapper, POS)
-
-WLZW - FreqEst - SQLiteWrapper - POS - ClassTagger
-
-
-Future task:
+Task:
 =============
 
 Frequency and Importance estimation (for now, let us implement three metrics: TF-IDF, MI, RIDF)
@@ -30,11 +25,6 @@ Write code documentation (compatible with Doxygen) + add as many comments as you
 Add a make file and test it by building on Linux + Windows
 Run the algorithms on large datasets and get some statistics on system scalability. I've attached a dataset to get you started. This dataset contains knowledge base articles from Microsoft. The format is as follows: KB Identifier $ Title $ Systems that this article applies to $ Description. But it is enough if you treat documents as follows: Document ID $ Any other stuff here.
 
-
-Questions:
-=========
-
-may need to add update to SQLite wrapper later
 
 References:
 ==========
