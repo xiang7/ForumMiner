@@ -4,9 +4,12 @@ ForumMiner
 
 Current task:
 =============
-POS - wait for rahul's reply
 
-implememt distributed and shared parallel model of importance ranking
+test setup script on windows and linux
+
+write command line support on py files (now written: WLZW.py, FreqEst.py, SQLiteWrapper, POS)
+
+WLZW - FreqEst - SQLiteWrapper - POS - ClassTagger
 
 
 Future task:

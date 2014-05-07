@@ -4,6 +4,10 @@ import esm
 from NgramEntry import NgramEntry
 import time
 import math
+import sys
+import argparse
+import os
+from WLZW import WLZWCompressor, ParallelWLZW
 
 
 class FreqEst:
@@ -18,14 +22,11 @@ class FreqEst:
 		"""Initialize the estimator.
 		@param key_list - a list of patterns, the estimator will search on this list of patterns
 		@param separator - the separator string that separates doc id and documents"""
-		print len(key_list)
 		self._key_list=key_list
-		prev=time.time()
 		self._index = esm.Index()
 		for r in self._key_list:
 			self._index.enter(r)
 		self._index.fix()
-		print "build automata: ", time.time()-prev
 		self._table = dict()
 		self._N=0 #total number of documents
 		self._separator=separator
@@ -141,3 +142,50 @@ class FreqEst:
 		#put the importance metrics together
 		return [tfidf,mi,ridf]
 	
+
+#command line support
+#the following provide support for calling from command line
+if __name__=='__main__':
+	parser=argparse.ArgumentParser(description='Frequency estimate and importance metrics computation. ')
+        parser.add_argument('-i',help='required, input file (corpus)',required=True)
+	parser.add_argument('-l',help='list of frequent words (words in the corpus), if not specified, will use WLZW to get list of keywords')
+        parser.add_argument('-np',type=int,help='number of processes (currently parallelism not supported in frequency estimate, default to 1), if used with -l, will use np processes to extract frequent patterns')
+        parser.add_argument('-o', help='required, output file (of frequent patterns)',required=True)
+
+        #parse args
+        args,unknown = parser.parse_known_args(sys.argv)
+
+	###check input file availability
+	if not os.path.isfile(args.i):
+		print 'Corpus file can\'t be found. Check -i file.'
+		exit(0)
+
+	###number of process to process, always default to 1
+	np=1
+	if args.np!=None and args.np>0:
+		np=args.np
+
+	###list of frequent words
+	l=[]
+	#read it from file
+	if args.l!=None and os.path.isfile(args.l):
+		with open(args.l,'r') as f:
+			for line in f:
+				l.append(line.strip())
+	#extract them from the corpus file
+	else:
+		# 1 process
+		if np==1:
+			compressor=WLZWCompressor()
+			compressor.compress_file(args.i)
+			l=compressor.get_pattern()
+
+		# >1 process
+		else:
+			compressor=ParallelWLZW()
+			l=compressor.compress_file(args.i,np)
+
+	#match frequent words
+	fe=FreqEst(l)
+	fe.search_file(args.i)
+	fe.export_to_file(args.o)	
