@@ -1,6 +1,13 @@
 ForumMiner
 ==========
 
+Files
+=====
+*.py:	python code
+html/:	documentation
+report:	first report of the project
+config:	config file for doxygen
+
 
 Current task:
 =============
