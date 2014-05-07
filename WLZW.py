@@ -18,6 +18,7 @@ import argparse
 #Keep dictionary as class memember since compress is called sentence by sentence
 #nltk needed, data in nltk needed as well
 
+
 class WLZWCompressor:
 	"""
 	The class for WLZW Compressor. 
