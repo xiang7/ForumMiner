@@ -4,7 +4,7 @@ import os
 from multiprocessing import Pool
 import copy_reg 
 import time
-import concurrent.futures
+#import concurrent.futures
 from mpi4py import MPI
 from Tool import Split
 import os
@@ -240,19 +240,19 @@ def _union_recur(l):
 		return l[1] | l[0]
 	return _union_recur(l[0:len(l)/2]) | _union_recur(l[len(l)/2:len(l)])
 
-def _union_binary_tree(l,np):
-	"""helper functions to test for a more efficient union. not used in the class code"""
-	curr=l
-	while len(curr)>1:
-		new=[]
-		for i in range(0,len(curr),2):
-			new.append(curr[i:i+2])
-		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
-			result=executor.map(_union_two,new)
-			curr=[]
-			for re in result:
-				curr.append(re)
-	return curr[0]
+#def _union_binary_tree(l,np):
+#	"""helper functions to test for a more efficient union. not used in the class code"""
+#	curr=l
+#	while len(curr)>1:
+#		new=[]
+#		for i in range(0,len(curr),2):
+#			new.append(curr[i:i+2])
+#		with concurrent.futures.ThreadPoolExecutor(max_workers=np) as executor:
+#			result=executor.map(_union_two,new)
+#			curr=[]
+#			for re in result:
+#				curr.append(re)
+#	return curr[0]
 
 def _union_two(l):
 	"""helper functions to test for a more efficient union. not used in the class code"""
