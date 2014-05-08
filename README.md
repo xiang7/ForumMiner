@@ -32,18 +32,28 @@ Note: For detailed instruction of running a .py file (such as WLZW.py), do
 
 <code>python WLZW.py -i corpus -np 4 -o patterns</code>
 
-From a file named 'corpus', where each line is a document, extract frequent patterns (ngram) using 4 processes. Output is written to a file named 'patterns' where each line is a pattern (ngram). For more details, see
+From a file named 'corpus', where each line is a document, extract frequent patterns (ngram) using 4 processes. Output is written to a file named 'patterns' where each line is a pattern (ngram). 
 
+For more details, see
 <code>python WLZW.py -h</code>
 
 ####FreqEst - Count the frequency of patterns and compute statistics
 <code> python FreqEst.py -i corpus -l patterns -o entries</code>
 
-Use the same 'corpus' and 'patterns' file from previous step as input, output the frequency of each pattern and the importance statistics (TFIDF, MI, RIDF). For more details, see
+Use the same 'corpus' and 'patterns' file from previous step as input, output the frequency of each pattern and the importance statistics (TFIDF, MI, RIDF). Write the output into a file named 'entries'.
 
+For more details, see
 <code> python FreqEst.py</code>
 
 ####SQLiteWrapper - Insert or query data into or from SQLite database
+
+<code>python SQLiteWrapper.py -i entries</code>
+
+Use the file 'entries' from previous step to insert the ngram entries into the SQLite database. You may select some of the records from the database to verify the correctness or for future use.
+
+Select all entries:
+
+<code>python SQLiteWrapper.py -o selected</code>
 
 ####POS - Part-of-Speech tagger
 
