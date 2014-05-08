@@ -5,8 +5,8 @@ HOW TO INSTALL
 --------------
 
 Prerequisites:
-+python:	https://www.python.org/download/
-+gcc:		http://gcc.gnu.org/install/
++ python:	https://www.python.org/download/
++ gcc:		http://gcc.gnu.org/install/
 
 python setup.py install 
 
@@ -29,7 +29,7 @@ FILES
 -----
 List of files in the directory
 
-+.py: 		python modules
-+html:		code documentation
-+report:	previous reports
-+config:	config file for doxygen (to generate code documentation)
++ .py: 		python modules
++ html:		code documentation
++ report:	previous reports
++ config:	config file for doxygen (to generate code documentation)
