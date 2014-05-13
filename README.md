@@ -28,6 +28,11 @@ Note: For detailed instruction of running a .py file (such as WLZW.py), do
 
 <code>python WLZW.py -h</code>
 
+Two ways to use code:
+
++ Use as library, see html/index.html for interface reference
++ Use as command line programs, the following gives example
+
 ####WLZW - Extract frequent patterns from a corpus
 
 <code>python WLZW.py -i corpus -np 4 -o patterns</code>
@@ -43,7 +48,7 @@ For more details, see
 Use the same 'corpus' and 'patterns' file from previous step as input, output the frequency of each pattern and the importance statistics (TFIDF, MI, RIDF). Write the output into a file named 'entries'.
 
 For more details, see
-<code> python FreqEst.py</code>
+<code> python FreqEst.py -h</code>
 
 ####SQLiteWrapper - Insert or query data into or from SQLite database
 
@@ -51,14 +56,55 @@ For more details, see
 
 Use the file 'entries' from previous step to insert the ngram entries into the SQLite database. You may select some of the records from the database to verify the correctness or for future use.
 
-Select all entries:
+Select all entries, write into a file named 'selected':
 
 <code>python SQLiteWrapper.py -o selected</code>
 
+If only the patterns or ngrams themselves are needed, rather than all other statistics:
+
+<code>python SQLiteWrapper.py -o selected -ngram\_only</code>
+
+It is also possible to select ngrams or ngram entries using criteria. E.g. Only select ngrams between certain lower bound and upper bound of mutual information (MI).
+
+<code>python SQLiteWrapper.py -o selected -mi\_lower 0.0 -mi\_upper 1.0</code>
+
+Or even specify more restrictions:
+
+<code>python SQLiteWrapper.py -o selected -mi\_lower 0.0 -mi\_upper 1.0 -tf\_lower 1 -tf\_upper 10 -max\_num 1000 -pos NN</code>
+
+The above command select ngrams that has a MI between 0.0 and 1.0, a term frequency between 1 and 10, and a part-of-speech tag of NN. Max number of returned result is 1000 and the output is written to a file named 'selected'. 
+
+For more detail and a whole list of criteria, see
+
+<code>python SQLiteWrapper.py -h</code>
+
 ####POS - Part-of-Speech tagger
+
+<code>python POS.py -i corpus -l tag\_list -s ' ' -o tagged\_list -u -m</code>
+
+'corpus' is the file used to populate the DB (from which the ngrams are extracted). 'tag\_list' is a file of ngrams to be tagged (if any ngram is not in the corpus and thus not in the DB, they'll be ignored). The tagged result will be written to a file named 'tagged\_list'. -u tells the program to update the DB with the POS tags. -m tells the program to output and thus update only the matched results (there is a matcher that matches useful POS patterns). The separator between document id and document content is specified by -s (space ' ' in this case, default to '$').
+
+The -l option can be changed into -a so that no list of words to tag is needed. The program will tag all ngrams in the DB. See the following example:
+
+<code>python POS.py -i corpus -a -s ' ' -o tagged\_list -u -m</code>
+
+For complete detail, see:
+
+<code>python POS.py -h</code>
 
 ####ClassTagger - Give tags to patterns and tag the patterns in corpus
 
+<code>python ClassTagger.py -i tagged\_ngram</code>
+
+Insert tags for ngrams into the DB using an input file 'tagged\_ngram'. The file uses a format of 'ngram tag' in each line. Other separators can be specified between ngram and tag. E.g. using $$$$$ as the separator, use:
+
+<code>python ClassTagger.py -i tagged\_ngram -s '$$$$$'</code>
+
+Another functionality is to use tagged ngrams in the DB to tag new documents:
+
+<code>python ClassTagger.py -t file\_to\_tag -to file\_tagged</code>
+
+It uses tagged ngrams in the DB to tag the file named 'file\_to\_tag' and write the output to a file named 'file\_tagged'. The input file could be the corpus.
 
 FILES
 -----
