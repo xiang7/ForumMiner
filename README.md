@@ -4,26 +4,43 @@ ForumMiner
 HOW TO INSTALL
 --------------
 
-Prerequisites:
+Install the follwoing if you haven't installed them:
+
+1. Prerequisites:
 + python:	https://www.python.org/download/
+
+To test, type 'python' in a command line. If the interactive python interface is entered, it is installed. Otherwise, install from the above url.
+
 + gcc:		http://gcc.gnu.org/install/
 
-Python setup tool
+To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
+
+2. Python setup tool
 + Linux <code>wget https://bootstrap.pypa.io/ez\_setup.py -O - | sudo python</code>
 + Windows
 
-python setup.py install 
+3. Python-dev
++ Linux <code>sudo apt-get python-dev</code>
++ Windows
 
-(to be tested)
+4. Run the following:
 
+<code>sudo python setup.py install</code>
+
+5. Install the NLTK data (this will take a while):
+
+<code>sudo python -m nltk.downloader all</code>
+
+6. Install the Numpy:
+
+<code>sudo python easy\_install numpy</code>
 
 HOW TO TEST INSTALLATION
 ------------------------
 
-python setup.py test 
+<code>sudo python setup.py test</code>
 
-(to be implemented, provide a small test data set)
-
+If see 'OK' in the last row of output, the installation is complete. Else, see the error message and try to install whatever is missing.
 
 HOW TO RUN CODE
 ---------------
