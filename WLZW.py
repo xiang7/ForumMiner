@@ -291,8 +291,8 @@ def _compress_file(tup):
 		f.readline()
 	for line in f:
 		if separator!=None:
-			s=line.split(separator)
-			line=separator.join(s[1:])
+			ss=line.split(separator,1)
+			line=ss[1]
 		sents=tokenizer.tokenize(line)
 		for sent in sents:
 			wlzw.compress_sent(sent)
@@ -308,6 +308,7 @@ if __name__=='__main__':
 	parser=argparse.ArgumentParser(description='WLZW algorithm. Extract frequent patters from a corpus. Parallelizm supported.')
 	parser.add_argument('-i',help='input file (corpus)',required=True)
 	parser.add_argument('-np',type=int,help='number of processes (default to 1)')
+	parser.add_argument('-s',help='separator between doc id and doc content, do not specify if no separator')	
 	parser.add_argument('-o', help='output file (of frequent patterns), default to stdout')
 
 	#parse args
@@ -330,16 +331,21 @@ if __name__=='__main__':
 
 	patterns=[]
 
+	#separator
+	separator=None
+	if args.s !=None:
+		separator=args.s
+
 	# 1 process
 	if np==1:
 		compressor=WLZWCompressor()
-		compressor.compress_file(args.i)
+		compressor.compress_file(args.i,separator=separator)
 		patterns=compressor.get_pattern()
 
 	# >1 process
 	else:
 		compressor=ParallelWLZW()
-		patterns=compressor.compress_file(args.i,np)
+		patterns=compressor.compress_file(args.i,np,separator=separator)
 
 	for p in patterns:
 		outputfile.write(p.strip()+'\n')

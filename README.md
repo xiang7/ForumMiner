@@ -106,6 +106,11 @@ Another functionality is to use tagged ngrams in the DB to tag new documents:
 
 It uses tagged ngrams in the DB to tag the file named 'file\_to\_tag' and write the output to a file named 'file\_tagged'. The input file could be the corpus.
 
+For more details, see:
+
+<code>python ClassTagger.py -h</code>
+
+
 FILES
 -----
 List of files in the directory
