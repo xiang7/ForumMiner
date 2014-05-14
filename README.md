@@ -10,22 +10,25 @@ Install the follwoing if you haven't installed them:
 	+	python:	https://www.python.org/download/
 
 		To test, type 'python' in a command line. If the interactive python interface is entered, it is installed. Otherwise, install from the above url.
+		For windows, remember to set the Path variable, so that 'python' works in cmd.
 
 	+	gcc:		http://gcc.gnu.org/install/
 
 		To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
 
 2. 	Python setup tool
-	+	Linux <code>wget https://bootstrap.pypa.io/ez\_setup.py -O - | sudo python</code>
-	+	Windows
+	+	Linux <code>wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python</code>
+	+	Windows https://pypi.python.org/pypi/setuptools#windows-7-or-graphical-install, download ez_setup.py file, run 'python ez_setup.py install' from cmd.
 
 3.	Python-dev
-	+	Linux <code>sudo apt-get python-dev</code>
+	+	Linux <code>sudo apt-get install python-dev</code>
 	+	Windows
 
 4.	Run the following:
 
 	<code>sudo python setup.py install</code>
+
+	windows: has problem with esmre, in pypi's operation system item, it only has POSIX
 
 5.	Install the NLTK data (this will take a while):
 
