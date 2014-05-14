@@ -7,33 +7,33 @@ HOW TO INSTALL
 Install the follwoing if you haven't installed them:
 
 1.	Prerequisites:
-	+ python:	https://www.python.org/download/
+	+	python:	https://www.python.org/download/
 
-	To test, type 'python' in a command line. If the interactive python interface is entered, it is installed. Otherwise, install from the above url.
+		To test, type 'python' in a command line. If the interactive python interface is entered, it is installed. Otherwise, install from the above url.
 
-	+ gcc:		http://gcc.gnu.org/install/
+	+	gcc:		http://gcc.gnu.org/install/
 
-	To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
+		To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
 
 2. 	Python setup tool
-	+ Linux <code>wget https://bootstrap.pypa.io/ez\_setup.py -O - | sudo python</code>
-	+ Windows
+	+	Linux <code>wget https://bootstrap.pypa.io/ez\_setup.py -O - | sudo python</code>
+	+	Windows
 
-3. Python-dev
-	+ Linux <code>sudo apt-get python-dev</code>
-	+ Windows
+3.	Python-dev
+	+	Linux <code>sudo apt-get python-dev</code>
+	+	Windows
 
-4. Run the following:
+4.	Run the following:
 
-<code>sudo python setup.py install</code>
+	<code>sudo python setup.py install</code>
 
-5. Install the NLTK data (this will take a while):
+5.	Install the NLTK data (this will take a while):
 
-<code>sudo python -m nltk.downloader all</code>
+	<code>sudo python -m nltk.downloader all</code>
 
-6. Install the Numpy:
+6.	Install the Numpy:
 
-<code>sudo python easy\_install numpy</code>
+	<code>sudo python easy\_install numpy</code>
 
 HOW TO TEST INSTALLATION
 ------------------------
