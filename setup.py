@@ -1,10 +1,9 @@
 from setuptools import setup
-import tests
 
 setup(
 	name='ForumMiner',
 	version='0.0dev',
-	install_requires = ['esmre','nltk','mpi4py'],
+	install_requires = ['esmre','nltk'],
 	author='Luojie Xiang',
 	test_suite="tests.tests"
 	)

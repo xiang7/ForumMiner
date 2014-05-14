@@ -5,7 +5,7 @@ from multiprocessing import Pool
 import copy_reg 
 import time
 #import concurrent.futures
-from mpi4py import MPI
+#from mpi4py import MPI
 from Tool import Split
 import os
 import tempfile
@@ -158,73 +158,73 @@ class ParallelWLZW:
 
                 return final_set
 
-class DistributedWLZW:
-	"""
-	The class to run WLZW in distributed memory model. 
-	Dictionary does not persist through multipul calls of compress_file.
-	The parameters related to distributed computing is supplied at run time:
-	mpirun -np 4 -machines MachineFile python test.py
-	Example:
-	@code
-	dwlzw=DistributedWLZW()
-        final_set=dwlzw.compress_file('filename.txt')
-	@endcode
-	"""
+#class DistributedWLZW:
+#	"""
+#	The class to run WLZW in distributed memory model. 
+#	Dictionary does not persist through multipul calls of compress_file.
+#	The parameters related to distributed computing is supplied at run time:
+#	mpirun -np 4 -machines MachineFile python test.py
+#	Example:
+#	@code
+#	dwlzw=DistributedWLZW()
+#        final_set=dwlzw.compress_file('filename.txt')
+#	@endcode
+#	"""
 
-        def __init__(self):
-                self._comm=MPI.COMM_WORLD
-                self._size=self._comm.Get_size()
-                self._rank=self._comm.Get_rank()
+#       def __init__(self):
+#                self._comm=MPI.COMM_WORLD
+#                self._size=self._comm.Get_size()
+#                self._rank=self._comm.Get_rank()
 
-                self._mode=MPI.MODE_RDONLY
+#                self._mode=MPI.MODE_RDONLY
 
-	def compress_file(self,corpus,separator=None):
-		"""Compress file in distributed memory model
-		@param corpus - string, file path of the corpus
-		@param separator - the separtor string between doc id and doc, pass None if no doc id
-		@return set, the frequent patterns
-		"""
-                files=[]
+#	def compress_file(self,corpus,separator=None):
+#		"""Compress file in distributed memory model
+#		@param corpus - string, file path of the corpus
+#		@param separator - the separtor string between doc id and doc, pass None if no doc id
+#		@return set, the frequent patterns
+#		"""
+#               files=[]
                 #split the corpus
-                if self._rank==0:
-                        split=Split(corpus,self._size)
-                        files=split.get_filenames()
-                else:
-                        split=None
+#               if self._rank==0:
+#                        split=Split(corpus,self._size)
+#                        files=split.get_filenames()
+#                else:
+#                        split=None
                 #scatter the corpus
-                unit=self._comm.scatter(files,root=0)
+#                unit=self._comm.scatter(files,root=0)
 
                 #read the corpus, count lines, print
-                f=MPI.File.Open(self._comm,unit,self._mode)
-                ba = bytearray(f.Get_size())
+#               f=MPI.File.Open(self._comm,unit,self._mode)
+#                ba = bytearray(f.Get_size())
                 # read the contents into a byte array
-                f.Iread(ba)
+#                f.Iread(ba)
                 # close the file
-                f.Close()
+#                f.Close()
                 # write buffer to a tempfile
-                descriptor, path = tempfile.mkstemp(suffix='mpi'+str(self._rank)+'.txt')
-                tf = os.fdopen(descriptor, 'w')
-                tf.write(ba)
-                tf.close()
+#                descriptor, path = tempfile.mkstemp(suffix='mpi'+str(self._rank)+'.txt')
+#                tf = os.fdopen(descriptor, 'w')
+#                tf.write(ba)
+#                tf.close()
 
 		#call WLZW
-                wlzw=WLZWCompressor()
-                wlzw.compress_file(corpus,separator)
-		result=set(wlzw.get_pattern())
+#                wlzw=WLZWCompressor()
+#                wlzw.compress_file(corpus,separator)
+#		result=set(wlzw.get_pattern())
 
                 #all gather the result to file
-                result=self._comm.gather(result,root=0)
+#                result=self._comm.gather(result,root=0)
 
                 #union the result
-                final=set()
-                if self._rank==0:
-                        for re in result:
-                                final=final | re
+#                final=set()
+#                if self._rank==0:
+#                        for re in result:
+#                                final=final | re
 
                 #delete the file
-                os.remove(path)
+#                os.remove(path)
                 #write the result back to file or return
-		return final
+#		return final
 
 
 def _union(l):

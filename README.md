@@ -8,6 +8,10 @@ Prerequisites:
 + python:	https://www.python.org/download/
 + gcc:		http://gcc.gnu.org/install/
 
+Python setup tool
++ Linux <code>wget https://bootstrap.pypa.io/ez\_setup.py -O - | sudo python</code>
++ Windows
+
 python setup.py install 
 
 (to be tested)
