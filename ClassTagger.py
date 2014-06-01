@@ -93,14 +93,17 @@ class ClassTagger:
 		"""tag a new file. 
 		@param filename - input file name
 		@param outputfile - outputfile name"""
-		with open(filename,'r') as f, open(outputfile,'w') as fout:
-			for line in f:
-				tmp=[]
-				s=self._tokenizer.tokenize(line.strip())
-				for sent in s:
-					tmp.append(self.tag_new_sent(sent))
-				fout.write(' '.join(tmp))
-				fout.write('\n')
+		f = open(filename,'r')
+		fout = open(outputfile,'w')
+		for line in f:
+			tmp=[]
+			s=self._tokenizer.tokenize(line.strip())
+			for sent in s:
+				tmp.append(self.tag_new_sent(sent))
+			fout.write(' '.join(tmp))
+			fout.write('\n')
+		f.close()
+		fout.close()
 
 
 def test():
