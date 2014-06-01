@@ -282,7 +282,7 @@ def _compress_file(tup):
 	rank=tup[1]
 	p=tup[2]
 	separator=tup[3]
-	f=open(filename,'r')
+	f=open(filename,'rb')
 	s=os.path.getsize(filename)
 	wlzw=WLZWCompressor()
 	tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')

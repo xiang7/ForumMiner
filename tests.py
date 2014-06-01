@@ -51,7 +51,7 @@ class tests(unittest.TestCase):
 		pos=POS.POSTagger(self.corpus,'$')
 		t=pos.tag(en[0])
 		if 'PRP$ NN' != t.strip():
-			raise Error('POS error')
+			raise Exception('POS error')
 
 	def test_ClassTagger(self):
 		pt=ClassTagger.PhraseTagger()
@@ -60,11 +60,11 @@ class tests(unittest.TestCase):
 		ct.tag_new_file(self.corpus,self.tagged)
 		text=open(self.tagged,'r').read()
 		if 'ACTION' not in text:
-			raise Error('ClassTagger error')
+			raise Exception('ClassTagger error')
 		if 'ENTITY' not in text:
-			raise Error('ClassTagger error')
+			raise Exception('ClassTagger error')
 		if 'NONE' in text:
-			raise Error('ClassTagger error')
+			raise Exception('ClassTagger error')
 
 if __name__=='__main__':
 	unittest.main()
