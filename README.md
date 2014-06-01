@@ -44,7 +44,8 @@ For windows, currently it only works on 32 bit arch
 HOW TO TEST INSTALLATION
 ------------------------
 
-<code>sudo python setup.py test</code>
+Linux - <code>sudo python setup.py test</code>
+Windows - <code>python tests.py</code>
 
 If see 'OK' in the last row of output, the installation is complete. Else, see the error message and try to install whatever is missing.
 
