@@ -28,16 +28,13 @@ For windows, currently it only works on 32 bit arch
 	+	Windows - skip this step
 
 4.	Run the following:
-
 	+	Linux - <code>sudo python setup.py install</code>
 	+	Windows - <code>python setup_win.py install</code>
 
 5.	Install the NLTK data (this will take a while):
-
 	+	<code>sudo python -m nltk.downloader all</code>, omit <code>sudo</code> for windows
 
 6.	Install the Numpy:
-
 	+	Linux - <code>sudo easy\_install numpy</code>
 	+	windows - www.lfd.uci.edu/~gohike/pythonlibs/#numpy
 
