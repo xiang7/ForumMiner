@@ -50,8 +50,8 @@ class tests(unittest.TestCase):
 		en=sql.entries_from_file(self.entries)
 		pos=POS.POSTagger(self.corpus,'$')
 		t=pos.tag(en[0])
-		print en[0].ngram, t
-		self.assertEqual('PRP$ NN',t.strip())
+		if 'PRP$ NN' != t.strip():
+			raise Error('POS error')
 
 	def test_ClassTagger(self):
 		pt=ClassTagger.PhraseTagger()
@@ -59,6 +59,12 @@ class tests(unittest.TestCase):
 		ct=ClassTagger.ClassTagger()
 		ct.tag_new_file(self.corpus,self.tagged)
 		text=open(self.tagged,'r').read()
-		self.assertIn('ACTION',text)
-		self.assertIn('ENTITY',text)
-		self.assertNotIn('NONE',text)
+		if 'ACTION' not in text:
+			raise Error('ClassTagger error')
+		if 'ENTITY' not in text:
+			raise Error('ClassTagger error')
+		if 'NONE' in text:
+			raise Error('ClassTagger error')
+
+if __name__=='__main__':
+	unittest.main()

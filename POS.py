@@ -51,6 +51,7 @@ class POSTagger:
 			while line != "":
 				doc_id=line.split(self._separator,1)[0]
 				self._table[doc_id]=curr
+				print doc_id,curr
 				curr=f.tell()
 				line=f.readline()
 		
@@ -66,6 +67,7 @@ class POSTagger:
 			[docid, docpos]=p.split(':')
 			#seek to the doc
 			self._f.seek(self._table[docid])
+			print docid, self._table[docid]
 			#read the doc
 			line=self._f.readline();
 			#peel off the doc id
