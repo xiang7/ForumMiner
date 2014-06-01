@@ -6,15 +6,18 @@ HOW TO INSTALL
 
 Install the follwoing if you haven't installed them:
 
+For windows, currently it only works on 32 bit arch
+
 1.	Prerequisites:
 	+	python:	https://www.python.org/download/
 
 		To test, type 'python' in a command line. If the interactive python interface is entered, it is installed. Otherwise, install from the above url.
-		For windows, remember to set the Path variable, so that 'python' works in cmd.
+		For windows, download python 2.6 and remember to set the Path variable, so that 'python' works in cmd, see https://docs.python.org/2/using/windows.html.
 
-	+	gcc:		http://gcc.gnu.org/install/
+	+	c environment:	
+		For linux, see http://gcc.gnu.org/install/. To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
 
-		To test, type 'gcc' in a command line. If the program asks for input file, it is installed. Otherwise, install from the above url.
+		For windows if vc++ 2008 or vs 2008 is installed, skip this step. Otherwise, install visual c++ 2008 express if not installed, http://go.microsoft.com/?linkid=7729279, and Windows SDK.
 
 2. 	Python setup tool
 	+	Linux <code>wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python</code>
@@ -22,21 +25,24 @@ Install the follwoing if you haven't installed them:
 
 3.	Python-dev
 	+	Linux <code>sudo apt-get install python-dev</code>
-	+	Windows
+	+	Windows - skip this step
 
 4.	Run the following:
 
-	<code>sudo python setup.py install</code>
-
-	windows: has problem with esmre, in pypi's operation system item, it only has POSIX
+	+	Linux - <code>sudo python setup.py install</code>
+	+	Windows - <code>python setup_win.py install</code>
 
 5.	Install the NLTK data (this will take a while):
 
-	<code>sudo python -m nltk.downloader all</code>
+	<code>sudo python -m nltk.downloader all</code>, omit sudo for windows
 
 6.	Install the Numpy:
 
-	<code>sudo python easy\_install numpy</code>
+	+	Linux - <code>sudo easy\_install numpy</code>
+	+	windows - www.lfd.uci.edu/~gohike/pythonlibs/#numpy
+
+7.	Install esmre (for windows only)
+	code.google.com/p/esmre/downloads/list
 
 HOW TO TEST INSTALLATION
 ------------------------
