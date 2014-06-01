@@ -34,7 +34,7 @@ For windows, currently it only works on 32 bit arch
 
 5.	Install the NLTK data (this will take a while):
 
-	<code>sudo python -m nltk.downloader all</code>, omit sudo for windows
+	+	<code>sudo python -m nltk.downloader all</code>, omit <code>sudo</code> for windows
 
 6.	Install the Numpy:
 
@@ -42,7 +42,7 @@ For windows, currently it only works on 32 bit arch
 	+	windows - www.lfd.uci.edu/~gohike/pythonlibs/#numpy
 
 7.	Install esmre (for windows only)
-	code.google.com/p/esmre/downloads/list
+	+	code.google.com/p/esmre/downloads/list
 
 HOW TO TEST INSTALLATION
 ------------------------
